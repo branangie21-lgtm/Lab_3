@@ -29,7 +29,7 @@ def mostrar_info(df, nombre):
     st.write("Estadísticas:")
     st.write(df.describe())
     
-    #VEHICULOS
+#VEHICULOS
 if opcion == "Vehículos":
     mostrar_info(vehiculos, "Vehículos")
 
@@ -53,6 +53,7 @@ if opcion == "Vehículos":
 
     st.write("Vehículos filtrados por precio:")
     st.dataframe(filtrado_precio)
+
 # CATEGORIZACIÓN
     if "Electric_Range" in vehiculos.columns:
         def categoria_rango(x):
@@ -71,3 +72,38 @@ if opcion == "Vehículos":
         fig, ax = plt.subplots()
         conteo.plot(kind="bar", ax=ax)
         st.pyplot(fig)
+         
+#GRAFICO
+    vehiculos["RangoCategoria"] = pd.cut(
+    vehiculos["Electric_Range"],
+    bins=[0, 100, 250, vehiculos["Electric_Range"].max()],
+    labels=["Bajo", "Medio", "Alto"]
+    )
+
+    conteo = vehiculos["RangoCategoria"].value_counts()
+
+    st.write(conteo)
+
+    fig, ax = plt.subplots()
+    conteo.plot(kind="bar", ax=ax)
+    ax.set_title("Vehículos por Rango")
+    ax.set_xlabel("Categoría")
+    ax.set_ylabel("Cantidad")
+    st.pyplot(fig)    
+    
+#ANALIZIS
+    if "RangoCategoria" in vehiculos.columns:
+
+        agrupado = vehiculos.groupby("RangoCategoria").agg({
+        "Base_MSRP": "mean",
+        "Model Year": "mean",
+        "Electric_Range": "std"
+    })
+
+    st.subheader("Análisis Vehículos")
+    st.dataframe(agrupado)
+
+# GUARDAR
+    if st.button("Guardar Vehículos"):
+        vehiculos.to_csv("vehiculos_modificado.csv", index=False)
+        st.success("Archivo guardado")
