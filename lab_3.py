@@ -80,6 +80,8 @@ if opcion == "Vehículos":
     labels=["Bajo", "Medio", "Alto"]
     )
 
+    st.dataframe(vehiculos.head())
+    
     conteo = vehiculos["RangoCategoria"].value_counts()
 
     st.write(conteo)
