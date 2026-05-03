@@ -250,7 +250,7 @@ elif opcion == "Videojuegos":
     )
 
     st.dataframe(juegos.head())
-    
+
     conteo = juegos["GamaJuego"].value_counts()
 
     st.write(conteo)
@@ -319,6 +319,8 @@ elif opcion == "Netflix":
             return "Otro"
 
     netflix["TipoAudiencia"] = netflix["rating"].apply(clasificar)
+
+    st.dataframe(netflix.head())
 
     conteo = netflix["TipoAudiencia"].value_counts()
 
