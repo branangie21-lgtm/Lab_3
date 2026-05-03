@@ -206,3 +206,33 @@ elif opcion == "Videojuegos":
     
     filtrado_desc = juegos[juegos["salePercentage"] >= descuento]
     st.dataframe(filtrado_desc)
+    #INGRESO DE DATOS
+    nombre = st.text_input("Nombre")
+    precio = st.number_input("Precio", 0.0)
+
+    if st.button("Agregar"):
+        nuevo = {col: None for col in juegos.columns}  # crea todas las columnas
+
+        if "name" in juegos.columns:
+            nuevo["name"] = nombre
+
+        if "price" in juegos.columns:
+         nuevo["price"] = precio
+
+        nuevo_df = pd.DataFrame([nuevo])
+
+        juegos = pd.concat([juegos, nuevo_df], ignore_index=True)
+
+        st.success("Juego agregado correctamente")
+    # CATEGORÍA
+    if "price" in juegos.columns:
+        juegos["Categoria_Precio"] = pd.cut(juegos["price"], bins=3, labels=["Bajo", "Medio", "Alto"])
+        conteo = juegos["Categoria_Precio"].value_counts()
+
+        fig, ax = plt.subplots()
+        conteo.plot(kind="bar", ax=ax)
+        st.pyplot(fig)
+
+    if st.button("Guardar Juegos"):
+        juegos.to_csv("juegos_modificado.csv", index=False)
+   
