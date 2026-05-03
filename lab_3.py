@@ -135,7 +135,7 @@ elif opcion == "Gimnasio":
 
     filtrado2 = gym[gym["Fat_Percentage"] <= grasa]
     st.dataframe(filtrado2)
-    
+
 # INGRESO DE DATOS
     st.subheader("Agregar nuevo registro")
     nueva_cal = st.number_input("Calorías", 0)
@@ -155,3 +155,30 @@ elif opcion == "Gimnasio":
     
     if st.button("Guardar Gym"):
         gym.to_csv("gym_modificado.csv", index=False)
+
+    #GRAFICO
+    gym["NivelFrecuencia"] = pd.cut(
+    gym["Workout_Frequency (days/week)"],
+    bins=[0, 3, 5, 7],
+    labels=["Baja", "Moderada", "Alta"]
+    )
+
+    conteo = gym["NivelFrecuencia"].value_counts()
+
+    st.write(conteo)
+
+    fig, ax = plt.subplots()
+    conteo.plot(kind="bar", ax=ax)
+    ax.set_title("Frecuencia de Entrenamiento")
+    ax.set_xlabel("Nivel")
+    ax.set_ylabel("Cantidad")
+    st.pyplot(fig)
+    #ANALIZIS
+    agrupado = gym.groupby("NivelFrecuencia").agg({
+    "Session_Duration (hours)": "mean",
+    "Experience_Level": "mean",
+    "BMI": "std"
+    })
+
+    st.subheader("Análisis Gimnasio")
+    st.dataframe(agrupado)
