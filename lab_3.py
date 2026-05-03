@@ -265,3 +265,26 @@ elif opcion == "Videojuegos":
 
     st.subheader("Análisis Videojuegos")
     st.dataframe(agrupado)
+# NETFLIX
+
+elif opcion == "Netflix":
+
+    # FILTRO
+    mostrar_info(netflix, "Netflix")
+    peliculas = netflix[netflix["type"] == "Movie"]
+    peliculas["duration"] = peliculas["duration"].str.replace(" min", "")
+    peliculas["duration"] = pd.to_numeric(peliculas["duration"], errors="coerce")
+    duracion = st.slider(
+    "Duración mínima (minutos)",
+    int(peliculas["duration"].min()),
+    int(peliculas["duration"].max())
+)
+
+    filtrado = peliculas[peliculas["duration"] >= duracion]
+
+    st.dataframe(filtrado)
+    
+    if "release_year" in netflix.columns:
+        año = st.slider("Año", int(netflix["release_year"].min()), int(netflix["release_year"].max()))
+        filtrado = netflix[netflix["release_year"] == año]
+        st.dataframe(filtrado)
