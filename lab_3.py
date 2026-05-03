@@ -166,7 +166,7 @@ elif opcion == "Gimnasio":
     )
 
     st.dataframe(gym.head())
-    
+
     conteo = gym["NivelFrecuencia"].value_counts()
 
     st.write(conteo)
@@ -248,6 +248,9 @@ elif opcion == "Videojuegos":
     bins=[0, 10, 24, juegos["price"].max()],
     labels=["Baja", "Media", "Alta"]
     )
+
+    st.dataframe(juegos.head())
+    
     conteo = juegos["GamaJuego"].value_counts()
 
     st.write(conteo)
