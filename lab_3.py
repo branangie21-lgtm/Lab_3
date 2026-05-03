@@ -21,3 +21,10 @@ opcion = st.sidebar.selectbox(
     "Selecciona dataset",
     ["Vehículos", "Gimnasio", "Videojuegos", "Netflix"]
 )
+def mostrar_info(df, nombre):
+    st.subheader(f"Dataset: {nombre}")
+    st.write("Dimensiones:", df.shape)
+    st.write("Columnas:", df.columns.tolist())
+    st.dataframe(df.head(6))
+    st.write("Estadísticas:")
+    st.write(df.describe())
