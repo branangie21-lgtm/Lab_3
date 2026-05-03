@@ -146,24 +146,23 @@ elif opcion == "Gimnasio":
         gym.loc[len(gym)] = nuevo
         st.success("Dato agregado")
 
-    # CATEGORÍA
-    if "Calories Burned" in gym.columns:
-        gym["Nivel"] = pd.cut(gym["Calories Burned"], bins=3, labels=["Bajo", "Medio", "Alto"])
-        conteo = gym["Nivel"].value_counts()
-
-        fig, ax = plt.subplots()
-        conteo.plot(kind="bar", ax=ax)
-        st.pyplot(fig)
-    
-    if st.button("Guardar Gym"):
-        gym.to_csv("gym_modificado.csv", index=False)
-
     #GRAFICO
+    gym["Workout_Frequency (days/week)"] = gym["Workout_Frequency (days/week)"].astype(str)
+    gym["Workout_Frequency (days/week)"] = gym["Workout_Frequency (days/week)"].str.extract('(\d+)')
+
+    gym["Workout_Frequency (days/week)"] = pd.to_numeric(
+        gym["Workout_Frequency (days/week)"], errors="coerce"
+    )
+    gym = gym.dropna(subset=["Workout_Frequency (days/week)"])
+
     gym["NivelFrecuencia"] = pd.cut(
     gym["Workout_Frequency (days/week)"],
-    bins=[0, 3, 5, 7],
+    bins=[-1, 2, 5, 7],
     labels=["Baja", "Moderada", "Alta"]
     )
+
+    st.write("Conteo:")
+    st.write(gym["NivelFrecuencia"].value_counts())
 
     st.dataframe(gym.head())
 
@@ -177,6 +176,9 @@ elif opcion == "Gimnasio":
     ax.set_xlabel("Nivel")
     ax.set_ylabel("Cantidad")
     st.pyplot(fig)
+
+    if st.button("Guardar Gym"):
+        gym.to_csv("gym_modificado.csv", index=False)
     #ANALIZIS
     agrupado = gym.groupby("NivelFrecuencia").agg({
     "Session_Duration (hours)": "mean",
