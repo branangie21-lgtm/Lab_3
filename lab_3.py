@@ -135,3 +135,23 @@ elif opcion == "Gimnasio":
 
     filtrado2 = gym[gym["Fat_Percentage"] <= grasa]
     st.dataframe(filtrado2)
+    
+# INGRESO DE DATOS
+    st.subheader("Agregar nuevo registro")
+    nueva_cal = st.number_input("Calorías", 0)
+    if st.button("Agregar"):
+        nuevo = {"Calories Burned": nueva_cal}
+        gym.loc[len(gym)] = nuevo
+        st.success("Dato agregado")
+
+    # CATEGORÍA
+    if "Calories Burned" in gym.columns:
+        gym["Nivel"] = pd.cut(gym["Calories Burned"], bins=3, labels=["Bajo", "Medio", "Alto"])
+        conteo = gym["Nivel"].value_counts()
+
+        fig, ax = plt.subplots()
+        conteo.plot(kind="bar", ax=ax)
+        st.pyplot(fig)
+    
+    if st.button("Guardar Gym"):
+        gym.to_csv("gym_modificado.csv", index=False)
