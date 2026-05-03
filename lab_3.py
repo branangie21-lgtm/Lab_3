@@ -54,7 +54,7 @@ if opcion == "Vehículos":
     st.write("Vehículos filtrados por precio:")
     st.dataframe(filtrado_precio)
 
-# CATEGORIZACIÓN
+    # CATEGORIZACIÓN
     if "Electric_Range" in vehiculos.columns:
         def categoria_rango(x):
             if x < 100:
@@ -73,7 +73,7 @@ if opcion == "Vehículos":
         conteo.plot(kind="bar", ax=ax)
         st.pyplot(fig)
          
-#GRAFICO
+    #GRAFICO
     vehiculos["RangoCategoria"] = pd.cut(
     vehiculos["Electric_Range"],
     bins=[0, 100, 250, vehiculos["Electric_Range"].max()],
@@ -90,8 +90,8 @@ if opcion == "Vehículos":
     ax.set_xlabel("Categoría")
     ax.set_ylabel("Cantidad")
     st.pyplot(fig)    
-    
-#ANALIZIS
+
+    #ANALIZIS
     if "RangoCategoria" in vehiculos.columns:
 
         agrupado = vehiculos.groupby("RangoCategoria").agg({
@@ -103,7 +103,35 @@ if opcion == "Vehículos":
     st.subheader("Análisis Vehículos")
     st.dataframe(agrupado)
 
-# GUARDAR
+    # GUARDAR
     if st.button("Guardar Vehículos"):
         vehiculos.to_csv("vehiculos_modificado.csv", index=False)
         st.success("Archivo guardado")
+
+# GIMNASIO
+
+elif opcion == "Gimnasio":
+    mostrar_info(gym, "Gimnasio")
+
+    # FILTROS
+    if "Calories_Burned" in gym.columns:
+        calorias = st.slider(
+        "Calorías mínimas",
+        float(gym["Calories_Burned"].min()),
+        float(gym["Calories_Burned"].max())
+    )
+
+    filtrado = gym[gym["Calories_Burned"] >= calorias]
+    st.dataframe(filtrado)
+
+
+    # Grasa
+    if "Fat_Percentage" in gym.columns:
+        grasa = st.slider(
+        "Grasa máxima (%)",
+        float(gym["Fat_Percentage"].min()),
+        float(gym["Fat_Percentage"].max())
+    )
+
+    filtrado2 = gym[gym["Fat_Percentage"] <= grasa]
+    st.dataframe(filtrado2)
