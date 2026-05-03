@@ -288,3 +288,53 @@ elif opcion == "Netflix":
         año = st.slider("Año", int(netflix["release_year"].min()), int(netflix["release_year"].max()))
         filtrado = netflix[netflix["release_year"] == año]
         st.dataframe(filtrado)
+    # CATEGORÍA
+    if "type" in netflix.columns:
+        conteo = netflix["type"].value_counts()
+
+        fig, ax = plt.subplots()
+        conteo.plot(kind="bar", ax=ax)
+        st.pyplot(fig)
+
+    if st.button("Guardar Netflix"):
+        netflix.to_csv("netflix_modificado.csv", index=False)
+    #GRAFICO
+    def clasificar(x):
+        if x in ["G", "TV-Y", "TV-G", "TV-Y7", "TV-Y7-FV"]:
+            return "Niños"
+        elif x in ["PG", "TV-PG"]:
+            return "Adolescentes"
+        elif x in ["PG-13", "TV-14"]:
+         return "Adultos Jóvenes"
+        elif x in ["R", "TV-MA", "NC-17"]:
+            return "Adultos"
+        else:
+            return "Otro"
+
+    netflix["TipoAudiencia"] = netflix["rating"].apply(clasificar)
+
+    conteo = netflix["TipoAudiencia"].value_counts()
+
+    st.write(conteo)
+
+    fig, ax = plt.subplots()
+    conteo.plot(kind="bar", ax=ax)
+    ax.set_title("Audiencia en Netflix")
+    ax.set_xlabel("Categoría")
+    ax.set_ylabel("Cantidad")
+    st.pyplot(fig)  
+    #ANALIZIS
+    tipo_comun = netflix.groupby("TipoAudiencia")["type"].agg(lambda x: x.mode()[0])
+
+
+    peliculas = netflix[netflix["type"] == "Movie"].copy()
+    peliculas["duration"] = peliculas["duration"].str.replace(" min", "")
+    peliculas["duration"] = pd.to_numeric(peliculas["duration"], errors="coerce")
+
+    duracion_prom = peliculas.groupby("TipoAudiencia")["duration"].mean()
+
+    st.subheader("Tipo más común")
+    st.dataframe(tipo_comun)
+
+    st.subheader("Duración promedio")
+    st.dataframe(duracion_prom)
