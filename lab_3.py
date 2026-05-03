@@ -48,3 +48,26 @@ if opcion == "Vehículos":
         int(vehiculos["Base_MSRP"].min()),
         int(vehiculos["Base_MSRP"].max())
     )
+        
+        filtrado_precio = vehiculos[vehiculos["Base_MSRP"] <= precio]
+
+    st.write("Vehículos filtrados por precio:")
+    st.dataframe(filtrado_precio)
+# CATEGORIZACIÓN
+    if "Electric_Range" in vehiculos.columns:
+        def categoria_rango(x):
+            if x < 100:
+                return "Bajo"
+            elif x < 300:
+                return "Medio"
+            else:
+                return "Alto"
+
+        vehiculos["Categoria_Rango"] = vehiculos["Electric_Range"].apply(categoria_rango)
+
+        conteo = vehiculos["Categoria_Rango"].value_counts()
+
+        st.subheader("Gráfica")
+        fig, ax = plt.subplots()
+        conteo.plot(kind="bar", ax=ax)
+        st.pyplot(fig)
