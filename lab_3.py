@@ -17,3 +17,7 @@ vehiculos = pd.read_csv("Electric_Vehicle_Population.csv")
 gym = pd.read_csv("GymExerciseTracking.csv")
 juegos = pd.read_csv("steam_store_data_2024.csv")
 netflix = pd.read_csv("netflix_titles.csv")
+opcion = st.sidebar.selectbox(
+    "Selecciona dataset",
+    ["Vehículos", "Gimnasio", "Videojuegos", "Netflix"]
+)
