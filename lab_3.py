@@ -235,4 +235,33 @@ elif opcion == "Videojuegos":
 
     if st.button("Guardar Juegos"):
         juegos.to_csv("juegos_modificado.csv", index=False)
-   
+    #GRAFICO
+    juegos["price"] = pd.to_numeric(juegos["price"], errors = "coerce")
+    juegos["salePercentage"] = juegos["salePercentage"].replace('%', '', regex=True)
+    juegos["salePercentage"] = pd.to_numeric(juegos["salePercentage"], errors="coerce")
+    juegos["GamaJuego"] = pd.cut(
+    juegos["price"], 
+    bins=[0, 10, 24, juegos["price"].max()],
+    labels=["Baja", "Media", "Alta"]
+    )
+    conteo = juegos["GamaJuego"].value_counts()
+
+    st.write(conteo)
+
+    fig, ax = plt.subplots()
+    conteo.plot(kind="bar", ax=ax)
+    ax.set_title("Gama de Videojuegos")
+    ax.set_xlabel("Categoría")
+    ax.set_ylabel("Cantidad")
+    st.pyplot(fig)
+
+    #Analizis
+    agrupado = juegos.groupby("GamaJuego").agg({
+    "price": "mean",
+    "salePercentage": "mean"
+    })
+
+    agrupado["Desv_Precio"] = juegos.groupby("GamaJuego")["price"].std()
+
+    st.subheader("Análisis Videojuegos")
+    st.dataframe(agrupado)
