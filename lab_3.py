@@ -13,7 +13,7 @@ st.header("Universidad del Valle de Guatemala")
 st.subheader("CC2005 – Algoritmos y Programación Básica")
 st.title(" Laboratorio 3 - Conjunto de Datos")
 
-vehiculos = pd.read_csv("Electric_Vehicle_Population-2.csv")
+vehiculos = pd.read_csv("Electric_Vehicle_Population.csv")
 gym = pd.read_csv("GymExerciseTracking.csv")
 juegos = pd.read_csv("steam_store_data_2024.csv")
 netflix = pd.read_csv("netflix_titles.csv")
