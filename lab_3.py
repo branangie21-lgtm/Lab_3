@@ -28,3 +28,23 @@ def mostrar_info(df, nombre):
     st.dataframe(df.head(6))
     st.write("Estadísticas:")
     st.write(df.describe())
+    
+    #VEHICULOS
+if opcion == "Vehículos":
+    mostrar_info(vehiculos, "Vehículos")
+
+    # FILTROS
+    st.subheader("Filtros")
+    if "Model Year" in vehiculos.columns:
+        año = st.slider("Filtrar por año", int(vehiculos["Model Year"].min()), int(vehiculos["Model Year"].max()))
+        filtrado = vehiculos[vehiculos["Model Year"] == año]
+        st.dataframe(filtrado)
+    if "Base_MSRP" in vehiculos.columns:
+
+        vehiculos["Base_MSRP"] = pd.to_numeric(vehiculos["Base_MSRP"], errors="coerce")
+
+        precio = st.slider(
+        "Precio máximo",
+        int(vehiculos["Base_MSRP"].min()),
+        int(vehiculos["Base_MSRP"].max())
+    )
