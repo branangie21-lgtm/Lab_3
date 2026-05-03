@@ -81,7 +81,7 @@ if opcion == "Vehículos":
     )
 
     st.dataframe(vehiculos.head())
-    
+
     conteo = vehiculos["RangoCategoria"].value_counts()
 
     st.write(conteo)
@@ -165,6 +165,8 @@ elif opcion == "Gimnasio":
     labels=["Baja", "Moderada", "Alta"]
     )
 
+    st.dataframe(gym.head())
+    
     conteo = gym["NivelFrecuencia"].value_counts()
 
     st.write(conteo)
